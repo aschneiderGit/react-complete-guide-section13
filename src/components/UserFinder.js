@@ -1,7 +1,8 @@
-import {Fragment, useState, useEffect} from 'react';
-import {Component} from 'react';
+import {Fragment, Component} from 'react';
+
 import UsersContext from '../store/users-context';
 import style from './UserFinder.module.css';
+import ErrorBoundary from './ErrorBoundary';
 
 import Users from './Users';
 
@@ -21,7 +22,7 @@ class UserFinder extends Component {
 	componentDidUpdate(prevProps, prevState) {
 		if (prevState.searchTerm !== this.state.searchTerm) {
 			this.setState({
-				filteredUsers: this.context.value.filter((user) =>
+				filteredUsers: this.context.users.filter((user) =>
 					user.name.includes(this.state.searchTerm)
 				),
 			});
@@ -38,7 +39,9 @@ class UserFinder extends Component {
 				<div className={style.finder}>
 					<input type="search" onChange={this.searchChangeHandler.bind(this)} />
 				</div>
-				<Users users={this.state.filteredUsers} />
+				<ErrorBoundary>
+					<Users users={this.state.filteredUsers} />
+				</ErrorBoundary>
 			</Fragment>
 		);
 	}
